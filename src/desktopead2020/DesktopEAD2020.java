@@ -9,11 +9,13 @@ import java.sql.Statement;
 public class DesktopEAD2020 {
 
     public static void main(String[] args) {
+        
         // ============== Exemplo com postgres ==========================
         //String nomeDriver = "org.postgresql.Driver";
         //String localBancoDados = "jdbc:postgresql://localhost:5432/postgres";
         //String usuario = "postgres";
         //String senha = "admin";
+        
         
         // ============== Exemplo com mysql/mariadb =======================
         String nomeDriver = "org.mariadb.jdbc.Driver";
@@ -33,7 +35,7 @@ public class DesktopEAD2020 {
                 ResultSet rs = st.executeQuery("SELECT * FROM alunos");
 
                 while (rs.next()) {
-                    System.out.println(rs.getString("codigo") + "   " + rs.getString("nome")+ "   " + rs.getString("endereco"));
+                    System.out.println(rs.getString("id") + "   " + rs.getString("nome")+ "   " + rs.getString("endereco"));
                 }
 
             } else {
