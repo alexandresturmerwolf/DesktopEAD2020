@@ -8,30 +8,33 @@ import java.sql.Statement;
 
 public class DesktopEAD2020 {
 
-    public static void main(String[] args) {
-        
+    
+    public static void testaConexao() {
         // ============== Exemplo com postgres ==========================
-        //String nomeDriver = "org.postgresql.Driver";
-        //String localBancoDados = "jdbc:postgresql://localhost:5432/postgres";
-        //String usuario = "postgres";
-        //String senha = "admin";
+        String nomeDriver = "org.postgresql.Driver";
+        String localBancoDados = "jdbc:postgresql://localhost:5432/postgres";
+        String usuario = "postgres";
+        String senha = "admin";
         
         
         // ============== Exemplo com mysql/mariadb =======================
-        String nomeDriver = "org.mariadb.jdbc.Driver";
-        String localBancoDados = "jdbc:mariadb://localhost:3306/bancodados";
-        String usuario = "root";
-        String senha = "admin";
+        //String nomeDriver = "org.mariadb.jdbc.Driver";
+        //String localBancoDados = "jdbc:mariadb://localhost:3306/bancodados";
+        //String usuario = "root";
+        //String senha = "admin";
 
         Connection conexao = null;
 
         try {
 
             Class.forName(nomeDriver).newInstance();
-            conexao = DriverManager.getConnection(localBancoDados, usuario, senha);
+            conexao = DriverManager.getConnection(localBancoDados, usuario, senha);                        
 
             if (conexao != null) {
                 Statement st = conexao.createStatement();
+                
+                //st.execute("INSERT INTO alunos(id, nome, endereco) VALUES (4,'sapo', 'lagoa')");
+                
                 ResultSet rs = st.executeQuery("SELECT * FROM alunos");
 
                 while (rs.next()) {
@@ -41,10 +44,16 @@ public class DesktopEAD2020 {
             } else {
                 System.out.println("Problemas na conexão com o banco de dados!");
             }
+            
 
         } catch (Exception e) {
             e.printStackTrace();
         } 
+    }
+    
+    public static void main(String[] args) {
+       MenuPrincipal menu = new MenuPrincipal();
+       menu.setVisible(true);
     }
     
 }

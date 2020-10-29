@@ -49,6 +49,9 @@ public class Clientes extends javax.swing.JFrame {
         spGrid = new javax.swing.JScrollPane();
         tbGrid = new javax.swing.JTable();
         btCarrega = new javax.swing.JButton();
+        btDinamico = new javax.swing.JButton();
+        btMostra = new javax.swing.JButton();
+        btExclui = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -63,6 +66,7 @@ public class Clientes extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tbGrid.setToolTipText("");
         spGrid.setViewportView(tbGrid);
 
         btCarrega.setText("Carrega");
@@ -72,23 +76,54 @@ public class Clientes extends javax.swing.JFrame {
             }
         });
 
+        btDinamico.setText("Dinâmico");
+        btDinamico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btDinamicoActionPerformed(evt);
+            }
+        });
+
+        btMostra.setText("Mostra");
+        btMostra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btMostraActionPerformed(evt);
+            }
+        });
+
+        btExclui.setText("Exclui");
+        btExclui.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btExcluiActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(spGrid, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(1, 1, 1)
                 .addComponent(btCarrega)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btDinamico)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btMostra)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btExclui)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(spGrid, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(76, 76, 76)
-                .addComponent(btCarrega)
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btDinamico)
+                    .addComponent(btCarrega)
+                    .addComponent(btMostra)
+                    .addComponent(btExclui))
+                .addContainerGap(226, Short.MAX_VALUE))
         );
 
         pack();
@@ -100,9 +135,9 @@ public class Clientes extends javax.swing.JFrame {
         cabecalho.add("ID");
         cabecalho.add("Nome");
         cabecalho.add("Endereço");
-        
+
         Vector matriz = new Vector();
-        
+
         try {
             if (conexao != null) {
                 Statement st = conexao.createStatement();
@@ -127,6 +162,58 @@ public class Clientes extends javax.swing.JFrame {
         tbGrid.setModel(new DefaultTableModel(matriz, cabecalho));
 
     }//GEN-LAST:event_btCarregaActionPerformed
+
+    private void btDinamicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDinamicoActionPerformed
+        try {
+            Vector cabecalho = new Vector();
+            Vector matriz = new Vector();
+
+            if (conexao != null) {
+                Statement st = conexao.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM alunos");
+
+                for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
+                    cabecalho.add(rs.getMetaData().getColumnName(i + 1));
+                }
+
+                while (rs.next()) {
+                    Vector colunas = new Vector();
+                    for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
+                        colunas.add(rs.getString(i + 1));
+                    }
+                    matriz.add(new Vector(colunas));
+                }
+            }
+            tbGrid.setModel(new DefaultTableModel(matriz, cabecalho));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btDinamicoActionPerformed
+
+    private void btMostraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMostraActionPerformed
+        if (tbGrid.getSelectedRow() > -1) {
+            Mens.aviso("Conteúdos: "
+                    + tbGrid.getValueAt(tbGrid.getSelectedRow(), 0)
+                    + tbGrid.getValueAt(tbGrid.getSelectedRow(), 1)
+                    + tbGrid.getValueAt(tbGrid.getSelectedRow(), 2)
+            );
+        } else {
+            Mens.erro("Linha não selecionada");
+        }
+    }//GEN-LAST:event_btMostraActionPerformed
+
+    private void btExcluiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExcluiActionPerformed
+        if (tbGrid.getSelectedRow() > -1) {
+            try {
+                 Statement st = conexao.createStatement();
+                 int id = Integer.parseInt(""+tbGrid.getValueAt(tbGrid.getSelectedRow(), 0));
+                 st.execute("DELETE FROM alunos WHERE id='" + id + "'");
+                 btCarregaActionPerformed(null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_btExcluiActionPerformed
 
     /**
      * @param args the command line arguments
@@ -165,6 +252,9 @@ public class Clientes extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCarrega;
+    private javax.swing.JButton btDinamico;
+    private javax.swing.JButton btExclui;
+    private javax.swing.JButton btMostra;
     private javax.swing.JScrollPane spGrid;
     private javax.swing.JTable tbGrid;
     // End of variables declaration//GEN-END:variables
